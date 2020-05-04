@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CADE - Poe</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../assets/vendors/iconfonts/mdi/css/materialdesignicons.css">
+    <link rel="stylesheet" href="../assets/vendors/css/vendor.addons.css">
+    <!-- endinject -->
+    <!-- vendor css for this page -->
+    <link rel="stylesheet" href="../assets/vendors/iconfonts/flag-icon-css/css/flag-icon.css">
+    <link rel="stylesheet" href="../assets/vendors/hilightjs/skins/atom-one-light.css">
+    <!-- End vendor css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../assets/css/shared/style.css">
+    <!-- endinject -->
+    <!--link rel="shortcut icon" href="../assets/images/cade.ico" /-->
+
+    <style type="text/css">
+      
+      .example {
+          padding: 10px;
+          border: 1px solid #ccc;
+      }
+
+      .hidden {
+          display: none;
+      }
+      .visible{
+          display: inline;
+      }
+
+      div.tooltip { 
+        position: absolute;     
+        text-align: left;     
+        width: 80px;          
+        height: 40px;         
+        padding: 2px;       
+        font: 14px sans-serif;    
+        background: white; 
+        border: 2px;   
+        font-weight: bold; 
+        border-radius: 8px;     
+        pointer-events: none;
+    }
+
+    </style>
+
+  </head>
+  <body class="header-fixed docs-body">
+    <div class="doc-content-wrapper container">
+      <div class="doc-aside">
+        <div class="aside-header">
+          <a href="../demo_1/index.html"><img class="logo" src="../assets/images/CADE.png" alt="logo"></a>
+          <div class="nav-toggle-warpper">
+            <span class="nav-toggler"></span>
+          </div>
+        </div>
+        <ul class="nav">
+          <li class="nav-item">
+            <a href="#getting-started" class="nav-link active">HHI</a>
+          </li>
+          <li class="nav-item">
+            <a href="#cr" class="nav-link">CR</a>
+          </li>
+          <li class="nav-item">
+            <a href="#credits" class="nav-link">Credits</a>
+          </li>
+        </ul>
+      </div>
+      <div class="doc-content-section" id="getting-started">
+        <div class="doc-content-section-inner">
+          <h1>Herfindahl-Hirschman-Index (HHI)</h1>
+          <p>Esta análise trará informações sobre o nível de concentração antes e depois da fusão.</p>
+
+          <section id="basic-structure">
+            <h2>Upload File</h2>
+            <p>Aqui você deve carregar um arquivo <strong>.CSV</strong> onde a primeira linha do arquivo contém obrigatoriamente o nome das colunas <strong>empresas</strong> e <strong>share</strong>. Em seguida, cada linha contém o nome da empresa e sua respectiva participação de mercado. Importante enfatizar que os valores das participações estão entre um intervalo de 0 e 1 e que o caracter deciomal é o ponto (.) ao invés da vírgula (,). O <strong>Δ HHI</strong> está sendo calculado com as duas primeiras empresas da tabela. Faça <a href="hhi_example.csv" download="hhi_model">download do exemplo(aqui)</a>.</p>
+
+            <div class="example">
+              <input type="file" id="fileinput" accept=".csv"/>
+            </div>
+            
+            <output id="list"></output>
+
+            <div class="table"></div>
+          </section>
+          <hr>
+          <section id="template-structure" class="hidden">
+            <h2> 1) HHI vs Δ HHI.</h2>
+            <div id="plano"></div>
+          </section>
+          
+          <section id="cr">
+            <h1>Concentration Ratio (CR)</h1>
+            <p>Em breve...</p>
+          </section>
+          <section id="credits">
+            <h2>Credits</h2>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!--page body ends -->
+    <!-- SCRIPT LOADING START FORM HERE /////////////-->
+    <!-- plugins:js -->
+    <script src="../assets/vendors/js/core.js"></script>
+    <script src="../assets/vendors/js/vendor.addons.js"></script>
+    <!-- endinject -->
+    <!-- Vendor Js For This Page Ends-->
+    <script src="../assets/js/highlight.pack.js"></script>
+    <script>
+      $(document).ready(function()
+      {
+        $('body').scrollspy(
+        {
+          target: ".doc-aside .nav",
+          offset: 50
+        });
+        $(".doc-aside .nav .nav-link").on('click', function(event)
+        {
+          if (this.hash !== "")
+          {
+            event.preventDefault();
+            var hash = this.hash;
+            $('html, body').animate(
+            {
+              scrollTop: $(hash).offset().top
+            }, 800, function()
+            {
+              window.location.hash = hash;
+            });
+          }
+        });
+        $(".doc-aside .aside-header .nav-toggle-warpper").on("click", function()
+        {
+          toggleResponsiveNav();
+        });
+
+        function toggleResponsiveNav()
+        {
+          var screenWidth = $(window).outerWidth();
+          if (screenWidth < 991)
+          {
+            $(".doc-content-wrapper .doc-aside .nav").slideToggle();
+            $(".doc-content-wrapper .doc-aside .nav .nav-item").on("click", function()
+            {
+              $(".doc-content-wrapper .doc-aside .nav").slideUp();
+            });
+          }
+        }
+      });
+
+    </script>
+    <!-- Vendor Js For This Page Ends-->
+    
+    <!-- build:js -->
+    <script src="../assets/js/template.js"></script>
+    <!-- endbuild -->
+    
+    <!-- Load D3 from site -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!-- OpenFile from site -->
+    <script src="../assets/js/openFile.js"></script>
+
+    <!-- Graphs from site -->
+    <script src="../assets/js/d3charts.js"></script>
+
+    <!-- Precisao -->
+    <script src="https://rawgithub.com/MikeMcl/big.js/master/big.min.js"></script>
+  </body>
+</html>
