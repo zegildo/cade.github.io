@@ -23,7 +23,7 @@ function handleFileSelect(evt){
             _hhi = hhi(data);
             _d_hhi = delta_hhi(data, _hhi);
             show_hhi();
-            insert_point(svg, x_value=_d_hhi, y_value=_hhi, raio=9, color="blue");
+            insert_point(svg, x_value=_d_hhi[1], y_value=_d_hhi[0], raio=9, color="black");
 
         }
         fileReader.readAsText(files[0]);
@@ -37,7 +37,7 @@ function hhi(data){
     soma += (share)**2;
   }
   hhi = 10000 * soma;
-  return hhi.toPrecision(4);
+  return hhi;
 }
 
 function show_hhi(){
@@ -54,8 +54,10 @@ function delta_hhi(data, hhi){
     share = data[k]["share"];
     hhi_final += (share)**2;
   }
-  delta_hhi = (10000*hhi_final) - hhi;
-  return delta_hhi.toPrecision(3);
+  hhi_final = (10000*hhi_final)
+  delta_hhi = hhi_final - hhi;
+  result = [hhi_final.toPrecision(4), delta_hhi.toPrecision(3)];
+  return result;
 }
 
 function create_table(data){

@@ -1,0 +1,225 @@
+---
+title: "Benchmark"
+---
+
+# Problema da Contagem de Intersecções
+
+Dada uma tabela com duas colunas A e B aonde A é uma letra do alfabeto [A..Z] randomincamente selecionada e B é um número entre [0,10] também randomicamente selecionado o objetivo é produzir uma nova tabela contendo três colunas: letra inicial (letra_i), letra final (letra_f) e peso, de modo que o peso corresponda a quantidade de vezes que o mesmo número ocorre simultaneamente entre _letra_i_ e _letra_f_.
+
+**Exemplo 1:**
+
+_input_:
+
+| letra | valor |
+|-------|-------|
+| A     | 5     |
+| B     | 3     |
+| C     | 5     |
+| D     | 3     |
+| E     | 3     |
+| G     | 1     |
+
+_output_:
+
+| letra_i | letra_f | peso |
+|---------|---------|------|
+| A       | B       | 0    |
+| A       | C       | 1    |
+| A       | D       | 0    |
+| A       | E       | 0    |
+| A       | G       | 0    |
+| B       | C       | 0    |
+| B       | D       | 1    |
+| B       | E       | 1    |
+| B       | G       | 0    |
+| C       | D       | 0    |
+| C       | E       | 0    |
+| C       | G       | 0    |
+| D       | E       | 1    |
+| D       | G       | 0    |
+
+**Exemplo 2**
+
+
+_input_:
+
+| letra | valor |
+|-------|-------|
+| A     | 5     |
+| B     | 3     |
+| C     | 5     |
+| A     | 3     |
+| B     | 1     |
+| C     | 1     |
+
+_output_:
+
+| letra_i | letra_f | peso |
+|---------|---------|------|
+| A       | B       | 1    |
+| A       | C       | 1    |
+| B       | C       | 1    |
+
+**Contruindo as bases de dados: **
+
+```{r message=FALSE, warning=FALSE, database}
+library(dplyr)
+
+dataset_builder <- function(qt_dataset){
+  set.seed(123)
+  dados <- tibble(LETRAS = sample(LETTERS, qt_dataset, replace = TRUE),
+                  NUMEROS = sample(1:qt_dataset, qt_dataset, replace = TRUE)
+                  )
+
+  tabela <- tapply(X = dados$NUMEROS, INDEX = dados$LETRAS, unique)
+  return(tabela)
+}
+
+
+
+```
+
+
+
+**Versão original:**
+
+```{r message=FALSE, warning=FALSE, origial}
+fernando <- function(tabela){
+  
+  data_F <- data.frame(letra_i = NA, letra_j = NA, peso = NA)
+  total <- length(tabela)
+  
+  for(i in c(1:total)){
+    for(j in c(1:total)) {
+      peso <- sum(tabela[[i]] %in% tabela[[j]])
+      letra_i <- names(tabela[i])
+      letra_j <- names(tabela[j])
+      data_F[paste0(i,"-",j),] <- c(letra_i, letra_j, peso)
+    }
+  }
+  
+  data_F <- data_F[-1, ] #remove primeira linha de NAs
+  data_F <- transform(data_F, peso = as.integer(peso))
+  row.names(data_F) <- NULL 
+  
+  return(data_F)
+}
+
+```
+
+
+**Versão de João Isídio:**
+
+```{r message=FALSE, warning=FALSE, joao}
+joao <- function(tabela){
+  
+  library(tidyr)
+  
+  # Cria uma matriz triangular de postos
+  # somando as ocorrências similares nas celulas
+  data_J <- sapply(X = tabela,
+                   FUN = function(y){
+                             lapply(X = tabela, 
+                                    FUN = function(x){
+                                             sum(x %in% y)
+                                          }
+                                    )
+                         }
+                  )
+
+  data_J <- data_J %>% as.data.frame()
+  data_J$letra_i <- rownames(data_J)
+  data_J <- gather(data = data_J, key = "letra_j", value = "peso", -letra_i)
+  data_J$peso <- unlist(data_J$peso)
+  data_J <- data_J %>% arrange(letra_i, letra_j)
+  return(data_J)
+}
+
+```
+
+**Versão Tomás:**
+
+```{r message=FALSE, warning=FALSE, tomas}
+
+tomas <- function(tabela){
+  library(tidyverse)
+  
+  qtd_in <- function(a, b) {
+    sum(a %in% b)
+  }
+  
+  data_T <- map_df(tabela, ~map_int(tabela, qtd_in, b = .x)) %>%
+            mutate(linha = names(tabela)) %>%
+            pivot_longer(-linha)
+  
+  colnames(data_T) <- c('letra_i', 'letra_j', 'peso')
+  data_T <- transform(data_T, peso = as.integer(peso))
+  
+  return(data_T)
+  
+}
+```
+
+
+
+**Comparador de eficiências:**
+
+```{r message=FALSE, warning=FALSE, benchmk}
+library(microbenchmark)
+
+bech_mark <- function(size){
+  tabela <- dataset_builder(size)
+  comp <- microbenchmark("fernando" = {df_original <- fernando(tabela)},
+                       "tomas" = {df_tomas <- tomas(tabela)}, 
+                       "joao" = {df_joao <- joao(tabela)},
+                       check = 'identical') 
+  df <- print(comp)
+  df$ds_size <- size
+  return(df)
+}
+```
+
+Resultados:
+
+```{r message=FALSE, warning=FALSE, comparacao}
+p1 <- bech_mark(100)
+p2 <- bech_mark(1000)
+p3 <- bech_mark(10000)
+p4 <- bech_mark(100000)
+p5 <- bech_mark(1000000)
+p6 <- bech_mark(10000000)
+
+
+# O valor de p6 está em segundos
+# precisou ser ajustado para deixar todos os valores
+# na mesma ordem de grandeza
+#
+# sec <- c('min', 'lq', 'mean', 'median', 'uq', 'max')
+# p6[sec] <- p6[sec]*1000
+#
+
+total <- rbind(p1,p2,p3,p4,p5,p6)
+
+```
+
+**Gráfico para os valores medianos de performance para entradas com 100, 1.000, 10.000, 100.000, 1.000.000 e 10.000.000:**
+
+```{r message=FALSE, warning=FALSE, grafico}
+library(ggplot2)
+
+ggplot(data=total, 
+       aes(x=log10(ds_size), y=log10(median), group=expr, color=expr)) +
+       geom_line() + 
+       geom_point() +
+       labs(title = "Comparativo de Eficiência") +
+       ylab("log10 do tempo (ms)") +
+       xlab("log10 do tamanho da entrada") +
+       theme(
+             panel.background = element_blank()
+             )
+       
+```
+
+>**Conclusão Parcial: **O algoritmo do João é mais eficiente até uma entrada de 100.000 valores
+
+> **Observações:** Não estamos variando as possibilidades das letras, apenas as combinações de números, isso influencia diretamente no resultado. É provável que as performances mudem com maior variabilidade de combinações de letras e números bem como o armazenamento das estruturas. Deixaremos de ter um problema puramente _cpubound_ para termos um problema _iobound_ e _cpubound_ juntos.

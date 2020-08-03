@@ -76,6 +76,7 @@
     var x = d3.scaleLinear()
               .domain([0,1000])
               .range([0, width]);
+
     var y = d3.scaleLinear()
               .domain([0,10000])
               .range([height,0]);
@@ -92,33 +93,33 @@
     .style('fill', 'black');
 
  
-    insert_constant_line(svg, x1=0, y1=1500, x2=1000, y2=1500, color="green");
-    insert_constant_line(svg, x1=100, y1=0, x2=100, y2=10000, color="green");
-    insert_constant_line(svg, x1=200, y1=0, x2=200, y2=10000, color="red");
-    insert_constant_line(svg, x1=0, y1=2500, x2=1000, y2=2500, color="red");
+    insert_constant_line(svg, x1=0, y1=1500, x2=1000, y2=1500, color="black");
+    insert_constant_line(svg, x1=100, y1=0, x2=100, y2=10000, color="black");
+    insert_constant_line(svg, x1=200, y1=0, x2=200, y2=10000, color="black");
+    insert_constant_line(svg, x1=0, y1=2500, x2=1000, y2=2500, color="black");
 
 // add the x Axis
 svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x).ticks(20));
 
 // add the y Axis
 svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y).ticks(20));
   
 
   red_widht = x(1000) - x(200);  
-  color_area(svg, x1=x(200), y1=y(10000), width=red_widht, height=y(2500), color="red");
+  color_area(svg, x1=x(200), y1=y(10000), width=red_widht, height=y(2500), color="white");
 
   widht_green = x(1000) - x(100);
   height_green = y(margin.bottom) - y(1500);
-  color_area(svg, x1=x(100), y1=y(1500), width=widht_green, height=height_green, color="green");
-  color_area(svg, x1=x(0), y1=y(10000), width=x(100), height=y(0), color="green");
-  color_area(svg, x1=x(100), y1=y(10000), width=x(100), height=y(1500), color="yellow");
+  color_area(svg, x1=x(100), y1=y(1500), width=widht_green, height=height_green, color="white");
+  color_area(svg, x1=x(0), y1=y(10000), width=x(100), height=y(0), color="white");
+  color_area(svg, x1=x(100), y1=y(10000), width=x(100), height=y(1500), color="white");
 
   widht_yellow = x(x.domain()[x.domain().length - 1]) - x(200);
   height_yellow = y(margin.bottom) - y(1000)
-  color_area(svg, x1=x(200), y1=y(2500), width=widht_yellow, height=height_yellow, color="yellow");
+  color_area(svg, x1=x(200), y1=y(2500), width=widht_yellow, height=height_yellow, color="white");
 
   label_y(svg, length=y(0), label="HHI");
   label_x(svg, width=x(500), length=y(0), label="Δ HHI");
