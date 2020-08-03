@@ -4,13 +4,13 @@ title: "Benchmark"
 
 # Problema da Contagem de Intersecções
 
-Dada uma tabela com duas colunas A e B aonde A é uma letra do alfabeto [A..Z] randomincamente selecionada e B é um número entre [0,10] também randomicamente selecionado o objetivo é produzir uma nova tabela contendo três colunas: letra inicial (letra_i), letra final (letra_f) e peso, de modo que o peso corresponda a quantidade de vezes que o mesmo número ocorre simultaneamente entre _letra_i_ e _letra_f_.
+Dada uma tabela com duas colunas **letra** e **número** aonde **letra** é uma letra do alfabeto [A..Z] randomincamente selecionada e **número** é um número entre [0,10] também randomicamente selecionado o objetivo é produzir como saída uma nova tabela contendo três colunas: letra inicial (letra_i), letra final (letra_f) e peso, de modo que o peso seja o valor correspondente a quantidade de vezes que o mesmo número ocorre simultaneamente entre _letra_i_ e _letra_f_.
 
 **Exemplo 1:**
 
 _input_:
 
-| letra | valor |
+| letra | numero |
 |-------|-------|
 | A     | 5     |
 | B     | 3     |
@@ -220,6 +220,6 @@ ggplot(data=total,
        
 ```
 
->**Conclusão Parcial: **O algoritmo do João é mais eficiente até uma entrada de 100.000 valores
+>**Conclusão Parcial: **O algoritmo do João é mais eficiente até uma entrada de 100.000 valores. Aparentemente, após, isso os algoritmos convergem para uma mesma eficiência.
 
-> **Observações:** Não estamos variando as possibilidades das letras, apenas as combinações de números, isso influencia diretamente no resultado. É provável que as performances mudem com maior variabilidade de combinações de letras e números bem como o armazenamento das estruturas. Deixaremos de ter um problema puramente _cpubound_ para termos um problema _iobound_ e _cpubound_ juntos.
+> **Observações:** Não estamos variando as possibilidades das letras, apenas as combinações de números, isso influencia diretamente no resultado. É provável que as performances mudem com maior variabilidade de combinações de letras e números bem como o armazenamento das estruturas. Deixaremos de ter um problema puramente _cpubound_ para termos um problema _iobound_ e _cpubound_ juntos. Minha curiosidade se seguirá com o SparkR, Python e uma função em um BD relacional...
