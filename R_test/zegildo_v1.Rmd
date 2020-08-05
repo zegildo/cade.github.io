@@ -4,7 +4,7 @@ title: "Benchmark"
 
 # Problema da Contagem de Intersecções
 
-Dada uma tabela com duas colunas **letra** e **número** aonde **letra** é uma letra do alfabeto [A..Z] randomincamente selecionada e **número** é um número entre [0,10] também randomicamente selecionado o objetivo é produzir como saída uma nova tabela contendo três colunas: letra inicial (letra_i), letra final (letra_f) e peso, de modo que o peso seja o valor correspondente a quantidade de vezes que o mesmo número ocorre simultaneamente entre _letra_i_ e _letra_f_.
+Dada uma tabela com duas colunas **letra** e **número** aonde **letra** é uma letra do alfabeto [A..Z] randomincamente selecionada e **número** é um número entre [0,10] também randomicamente selecionado. O objetivo desde problema é produzir uma nova tabela contendo três colunas: letra inicial (letra_i), letra final (letra_f) e peso, de modo que o peso corresponda a quantidade de vezes que o mesmo número ocorre simultaneamente entre _letra_i_ e _letra_f_.
 
 **Exemplo 1:**
 
@@ -74,9 +74,6 @@ dataset_builder <- function(qt_dataset){
   tabela <- tapply(X = dados$NUMEROS, INDEX = dados$LETRAS, unique)
   return(tabela)
 }
-
-
-
 ```
 
 
@@ -111,9 +108,9 @@ fernando <- function(tabela){
 **Versão de João Isídio:**
 
 ```{r message=FALSE, warning=FALSE, joao}
+library(tidyr)
+
 joao <- function(tabela){
-  
-  library(tidyr)
   
   # Cria uma matriz triangular de postos
   # somando as ocorrências similares nas celulas
@@ -140,9 +137,9 @@ joao <- function(tabela){
 **Versão Tomás:**
 
 ```{r message=FALSE, warning=FALSE, tomas}
+library(tidyverse)
 
 tomas <- function(tabela){
-  library(tidyverse)
   
   qtd_in <- function(a, b) {
     sum(a %in% b)
@@ -187,7 +184,7 @@ p2 <- bech_mark(1000)
 p3 <- bech_mark(10000)
 p4 <- bech_mark(100000)
 p5 <- bech_mark(1000000)
-p6 <- bech_mark(10000000)
+#p6 <- bech_mark(10000000)
 
 
 # O valor de p6 está em segundos
@@ -198,7 +195,8 @@ p6 <- bech_mark(10000000)
 # p6[sec] <- p6[sec]*1000
 #
 
-total <- rbind(p1,p2,p3,p4,p5,p6)
+total <- rbind(p1,p2,p3,p4,p5)
+#p4,p5,p6)
 
 ```
 
@@ -208,12 +206,12 @@ total <- rbind(p1,p2,p3,p4,p5,p6)
 library(ggplot2)
 
 ggplot(data=total, 
-       aes(x=log10(ds_size), y=log10(median), group=expr, color=expr)) +
+       aes(x=ds_size, y=median, group=expr, color=expr)) +
        geom_line() + 
        geom_point() +
        labs(title = "Comparativo de Eficiência") +
-       ylab("log10 do tempo (ms)") +
-       xlab("log10 do tamanho da entrada") +
+       ylab("Tempo em milisegundos") +
+       xlab("Tamanho da entrada") +
        theme(
              panel.background = element_blank()
              )
